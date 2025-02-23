@@ -42,6 +42,7 @@ interface SlideState {
   deleteSlide: (index: number) => void
   setIsPresentationMode: (value: boolean) => void
   setCurrentStep: (slideId: string, step: number) => void
+  updateSlideContent: (content: string) => void
 }
 
 export const useSlideStore = create<SlideState>()(
@@ -176,6 +177,14 @@ export const useSlideStore = create<SlideState>()(
           slides: state.slides.map((slide) =>
             slide.id === slideId && slide.type === "code"
               ? { ...slide, currentStep: step }
+              : slide
+          ),
+        })),
+      updateSlideContent: (content) =>
+        set((state) => ({
+          slides: state.slides.map((slide, index) =>
+            index === state.currentSlideIndex && slide.type === "text"
+              ? { ...slide, content }
               : slide
           ),
         })),

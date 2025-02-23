@@ -1,11 +1,12 @@
 import * as Diff from "diff"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useSlideStore } from "~/store/slideStore"
 import type { CodeSlide } from "~/types/slide"
 import { CodeDiffView } from "./CodeDiffView"
 import { CodeHighlight } from "./CodeHighlight"
-import Image from "next/image"
+import { TextViewer } from "./elements/Text"
 
 interface DiffSegment {
   text: string
@@ -123,17 +124,19 @@ export function PresentationContent() {
     case "text":
       return (
         <motion.div
+          key={`text-${currentSlideIndex}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-white text-2xl"
         >
-          {currentSlide.content}
+          <TextViewer content={currentSlide.content} />
         </motion.div>
       )
 
     case "image":
       return (
         <motion.div
+          key={`image-${currentSlideIndex}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4"

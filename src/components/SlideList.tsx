@@ -11,23 +11,20 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react"
-import { useState } from "react"
 import Image from "next/image"
+import { useState } from "react"
 import { useSlideStore } from "~/store/slideStore"
 import type { Slide } from "~/types/slide"
 import { CodeHighlight } from "./CodeHighlight"
+import { TextViewer } from "./elements/Text"
 
 const renderSlidePreview = (slide: Slide) => {
   switch (slide.type) {
     case "code":
       const lastStep = slide.steps[slide.steps.length - 1]
-      return (
-        <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%] overflow-hidden">
-          <CodeHighlight code={lastStep.value} />
-        </div>
-      )
+      return <CodeHighlight code={lastStep.value} />
     case "text":
-      return <div className="p-4 text-white">{slide.content}</div>
+      return <TextViewer content={slide.content} />
     case "image":
       return (
         <div className="h-full flex items-center justify-center">
@@ -68,7 +65,9 @@ const DraggableSlide = ({
           }`}
           onClick={() => useSlideStore.getState().setCurrentSlideIndex(index)}
         >
-          {renderSlidePreview(slide)}
+          <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%] overflow-hidden">
+            {renderSlidePreview(slide)}
+          </div>
           <button
             className="absolute top-2 right-2 rounded-md bg-white/10 size-6 hover:bg-white/20 flex items-center justify-center"
             onClick={(e) => {
@@ -94,7 +93,6 @@ export function SlideList() {
   const deleteSlide = useSlideStore((state) => state.deleteSlide)
   const addSlide = useSlideStore((state) => state.addSlide)
   const [showAddMenu, setShowAddMenu] = useState(false)
-  const [draggedSlide, setDraggedSlide] = useState<Slide | null>(null)
 
   const handleDeleteSlide = (index: number) => {
     if (confirm("Are you sure you want to delete this slide?")) {

@@ -6,16 +6,14 @@ import {
   Trash2Icon,
 } from "lucide-react"
 import Image from "next/image"
-import { useCallback, useEffect, useState } from "react"
 import { useSlideStore } from "~/store/slideStore"
 import { CodeSlide } from "~/types/slide"
-import { debounce } from "~/utils/debounce"
-import { CodeHighlight } from "./CodeHighlight"
+import { CodeEditor } from "./elements/CodeEditor"
+import { TextEditor } from "./elements/Text"
 
 export function SlideEditor() {
   const slides = useSlideStore((state) => state.slides)
   const currentSlideIndex = useSlideStore((state) => state.currentSlideIndex)
-  const updateCodeSlide = useSlideStore((state) => state.updateCodeSlide)
   const addCodeStep = useSlideStore((state) => state.addCodeStep)
   const removeCodeStep = useSlideStore((state) => state.removeCodeStep)
   const setIsPresentationMode = useSlideStore(
@@ -23,27 +21,6 @@ export function SlideEditor() {
   )
 
   const currentSlide = slides[currentSlideIndex]
-  const [localValue, setLocalValue] = useState("")
-
-  useEffect(() => {
-    if (currentSlide?.type === "code") {
-      setLocalValue(currentSlide.steps[currentSlide.currentStep]?.value ?? "")
-    }
-  }, [currentSlide])
-
-  const debouncedUpdate = useCallback(
-    debounce((value: string) => {
-      if (currentSlide?.type === "code") {
-        updateCodeSlide(currentSlide.id, currentSlide.currentStep, value)
-      }
-    }, 500),
-    [currentSlide, updateCodeSlide]
-  )
-
-  const handleChange = (value: string) => {
-    setLocalValue(value)
-    debouncedUpdate(value)
-  }
 
   // Add step navigation buttons for code slides
   const StepNavigation = ({ slide }: { slide: CodeSlide }) => (
@@ -134,33 +111,9 @@ export function SlideEditor() {
       )}
 
       <div className="relative bg-[hsl(220,13%,18%)] p-6 rounded-lg text-white font-mono aspect-video max-w-screen-md w-full">
-        {currentSlide.type === "code" && (
-          <>
-            <textarea
-              spellCheck="false"
-              className="absolute inset-0 w-full h-full bg-transparent text-transparent font-mono outline-none resize-none p-6 caret-white"
-              placeholder="Type your code here..."
-              value={localValue}
-              onChange={(e) => handleChange(e.target.value)}
-            />
-            <CodeHighlight code={localValue} preWrap />
-          </>
-        )}
+        {currentSlide.type === "code" && <CodeEditor />}
 
-        {currentSlide.type === "text" && (
-          <textarea
-            value={currentSlide.content}
-            onChange={(e) => {
-              const newSlides = [...slides]
-              newSlides[currentSlideIndex] = {
-                ...currentSlide,
-                content: e.target.value,
-              }
-              useSlideStore.getState().setSlides(newSlides)
-            }}
-            className="w-full h-full p-4 bg-transparent text-white outline-none resize-none"
-          />
-        )}
+        {currentSlide.type === "text" && <TextEditor />}
 
         {currentSlide.type === "image" && (
           <div className="h-full flex flex-col gap-4">

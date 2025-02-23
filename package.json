@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
+    "@mdxeditor/editor": "^3.24.0",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/diff": "^7.0.1",
     "@types/prismjs": "^1.26.5",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -21,6 +23,7 @@
     "prismjs": "^1.29.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^10.0.0",
     "react-shiki": "^0.3.0",
     "react-syntax-highlighter": "^15.6.1",
     "use-local-storage-state": "^19.5.0",
