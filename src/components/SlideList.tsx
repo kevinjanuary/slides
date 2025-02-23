@@ -65,7 +65,7 @@ const DraggableSlide = ({
           }`}
           onClick={() => useSlideStore.getState().setCurrentSlideIndex(index)}
         >
-          <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%] overflow-hidden">
+          <div className="transform scale-[0.3] origin-top-left w-[333%] h-[333%] overflow-hidden pointer-events-none select-none">
             {renderSlidePreview(slide)}
           </div>
           <button
@@ -77,6 +77,9 @@ const DraggableSlide = ({
           >
             <Trash2Icon size={12} />
           </button>
+          <span className="capitalize text-[9px] px-1 py-0.5 rounded-md bg-white/5 text-white absolute bottom-2 left-2">
+            {slide.type}
+          </span>
         </pre>
       )}
     </Draggable>
