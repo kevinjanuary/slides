@@ -1,0 +1,178 @@
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  MaximizeIcon,
+  MinimizeIcon,
+  MonitorXIcon,
+} from "lucide-react"
+import { useEffect, useState } from "react"
+import { useSlideStore } from "~/store/slideStore"
+import { PresentationContent } from "./PresentationContent"
+
+const PresentationMode = () => {
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const currentSlide = useSlideStore((state) => state.currentSlide)
+  const slides = useSlideStore((state) => state.slides)
+  const onPreviousSlide = useSlideStore((state) => state.previousSlide)
+  const onNextSlide = useSlideStore((state) => state.nextSlide)
+  const onExit = useSlideStore((state) => state.setIsPresentationMode)
+
+  const toggleFullscreen = (fullscreen?: boolean) => {
+    try {
+      if (fullscreen === undefined) {
+        if (document.fullscreenElement) {
+          return document.exitFullscreen()
+        }
+
+        document.documentElement.requestFullscreen()
+      } else {
+        if (!fullscreen && document.fullscreenElement) {
+          return document.exitFullscreen()
+        }
+        if (fullscreen && !document.fullscreenElement) {
+          document.documentElement.requestFullscreen()
+        }
+      }
+    } catch (error) {
+      console.error("Failed to toggle fullscreen", error)
+    }
+  }
+
+  // make sure isFullscreen is in sync with document.fullscreenElement
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
+
+    handleFullscreenChange()
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    const presentationContainer = document.getElementById(
+      "presentation-container"
+    )
+    if (!presentationContainer) return
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      e.preventDefault()
+      if (e.key === "ArrowLeft") {
+        onPreviousSlide()
+      }
+      if (e.key === "ArrowRight") {
+        onNextSlide()
+      }
+      if (e.key === "f") {
+        toggleFullscreen()
+      }
+      if (e.key === "Escape") {
+        onExit(false)
+      }
+    }
+
+    const handlePrevSlide = (e: MouseEvent) => {
+      e.preventDefault()
+      onPreviousSlide()
+    }
+
+    document.addEventListener("keydown", handleKeydown)
+    presentationContainer.addEventListener("click", onNextSlide)
+    presentationContainer.addEventListener("contextmenu", handlePrevSlide)
+    return () => {
+      document.removeEventListener("keydown", handleKeydown)
+      presentationContainer.removeEventListener("click", onNextSlide)
+      presentationContainer.removeEventListener("contextmenu", handlePrevSlide)
+    }
+  }, [onNextSlide, onPreviousSlide, onExit])
+
+  return (
+    <div className="fixed inset-0 bg-[hsl(220,13%,10%)] flex items-center justify-center select-none">
+      <div className="w-full max-w-4xl" id="presentation-container">
+        <div className="bg-[hsl(220,13%,18%)] p-8 pt-0 rounded-lg aspect-video">
+          <div className="flex pt-6 pb-4 justify-between items-center gap-4 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="size-3 bg-red-500 rounded-full"></span>
+              <span className="size-3 bg-yellow-500 rounded-full"></span>
+              <span className="size-3 bg-green-500 rounded-full"></span>
+            </div>
+            <h1>GDGOC.jsx</h1>
+            <div className="text-white">
+              {currentSlide + 1} / {slides.length}
+            </div>
+          </div>
+          <pre
+            className="text-xl leading-relaxed overflow-hidden whitespace-pre-wrap relative h-full pointer-events-none select-none"
+            id="presentation-code-container"
+          >
+            <PresentationContent />
+          </pre>
+        </div>
+      </div>
+      <div className="fixed bottom-8 left-8 flex gap-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleFullscreen(false)
+            onExit(false)
+          }}
+          className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm"
+        >
+          <MonitorXIcon size={18} />
+          <span className="hidden sm:inline">Exit</span>
+        </button>
+        {document.fullscreenEnabled && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFullscreen()
+            }}
+            className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm"
+          >
+            {isFullscreen ? (
+              <>
+                <MinimizeIcon size={18} />
+                <span className="hidden sm:inline">Exit Fullscreen</span>
+              </>
+            ) : (
+              <>
+                <MaximizeIcon size={18} />
+                <span className="hidden sm:inline">Fullscreen</span>
+              </>
+            )}
+          </button>
+        )}
+      </div>
+      <div className="fixed bottom-8 right-8 flex gap-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onPreviousSlide()
+          }}
+          className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm disabled:bg-[hsl(220,13%,26%)] disabled:opacity-50"
+          disabled={currentSlide === 0}
+        >
+          <ArrowLeftIcon size={18} />
+          <span className="hidden sm:inline">Previous</span>
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onNextSlide()
+          }}
+          className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm disabled:bg-[hsl(220,13%,26%)] disabled:opacity-50"
+          disabled={currentSlide === slides.length - 1}
+        >
+          <span className="hidden sm:inline">Next</span>
+          <ArrowRightIcon size={18} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default PresentationMode

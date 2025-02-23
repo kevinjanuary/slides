@@ -20,6 +20,27 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.overflow-overlay {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.overflow-overlay::-webkit-scrollbar {
+  width: 8px;
+}
+.overflow-overlay::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10rem;
+}
+
+.overflow-overlay::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+}
+
+.overflow-overlay::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
