@@ -11,11 +11,13 @@ import { PresentationContent } from "./PresentationContent"
 
 const PresentationMode = () => {
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const currentSlide = useSlideStore((state) => state.currentSlide)
+  const currentSlideIndex = useSlideStore((state) => state.currentSlideIndex) // Changed from currentSlide
   const slides = useSlideStore((state) => state.slides)
-  const onPreviousSlide = useSlideStore((state) => state.previousSlide)
-  const onNextSlide = useSlideStore((state) => state.nextSlide)
-  const onExit = useSlideStore((state) => state.setIsPresentationMode)
+  const previousStep = useSlideStore((state) => state.previousStep) // Changed from onPreviousSlide
+  const nextStep = useSlideStore((state) => state.nextStep) // Changed from onNextSlide
+  const setIsPresentationMode = useSlideStore(
+    (state) => state.setIsPresentationMode
+  )
 
   const toggleFullscreen = (fullscreen?: boolean) => {
     try {
@@ -62,33 +64,33 @@ const PresentationMode = () => {
     const handleKeydown = (e: KeyboardEvent) => {
       e.preventDefault()
       if (e.key === "ArrowLeft") {
-        onPreviousSlide()
+        previousStep()
       }
       if (e.key === "ArrowRight") {
-        onNextSlide()
+        nextStep()
       }
       if (e.key === "f") {
         toggleFullscreen()
       }
       if (e.key === "Escape") {
-        onExit(false)
+        setIsPresentationMode(false)
       }
     }
 
     const handlePrevSlide = (e: MouseEvent) => {
       e.preventDefault()
-      onPreviousSlide()
+      previousStep()
     }
 
     document.addEventListener("keydown", handleKeydown)
-    presentationContainer.addEventListener("click", onNextSlide)
+    presentationContainer.addEventListener("click", nextStep)
     presentationContainer.addEventListener("contextmenu", handlePrevSlide)
     return () => {
       document.removeEventListener("keydown", handleKeydown)
-      presentationContainer.removeEventListener("click", onNextSlide)
+      presentationContainer.removeEventListener("click", nextStep)
       presentationContainer.removeEventListener("contextmenu", handlePrevSlide)
     }
-  }, [onNextSlide, onPreviousSlide, onExit])
+  }, [nextStep, previousStep, setIsPresentationMode])
 
   return (
     <div className="fixed inset-0 bg-[hsl(220,13%,10%)] flex items-center justify-center select-none">
@@ -102,7 +104,7 @@ const PresentationMode = () => {
             </div>
             <h1>GDGOC.jsx</h1>
             <div className="text-white">
-              {currentSlide + 1} / {slides.length}
+              {currentSlideIndex + 1} / {slides.length}
             </div>
           </div>
           <pre
@@ -118,7 +120,7 @@ const PresentationMode = () => {
           onClick={(e) => {
             e.stopPropagation()
             toggleFullscreen(false)
-            onExit(false)
+            setIsPresentationMode(false)
           }}
           className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm"
         >
@@ -151,10 +153,10 @@ const PresentationMode = () => {
         <button
           onClick={(e) => {
             e.stopPropagation()
-            onPreviousSlide()
+            previousStep()
           }}
           className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm disabled:bg-[hsl(220,13%,26%)] disabled:opacity-50"
-          disabled={currentSlide === 0}
+          disabled={currentSlideIndex === 0}
         >
           <ArrowLeftIcon size={18} />
           <span className="hidden sm:inline">Previous</span>
@@ -162,10 +164,10 @@ const PresentationMode = () => {
         <button
           onClick={(e) => {
             e.stopPropagation()
-            onNextSlide()
+            nextStep()
           }}
           className="px-4 py-2 bg-[hsl(220,13%,26%)] hover:bg-[hsl(220,13%,34%)] rounded-lg text-white flex items-center gap-2 text-sm disabled:bg-[hsl(220,13%,26%)] disabled:opacity-50"
-          disabled={currentSlide === slides.length - 1}
+          disabled={currentSlideIndex === slides.length - 1}
         >
           <span className="hidden sm:inline">Next</span>
           <ArrowRightIcon size={18} />
