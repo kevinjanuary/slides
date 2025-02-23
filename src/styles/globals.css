@@ -1,0 +1,35 @@
+/* Editor.js Styles */
+.editor-container .codex-editor {
+  padding: 0;
+}
+
+.editor-container .codex-editor__redactor {
+  padding-bottom: 0 !important;
+}
+
+.editor-container .ce-block {
+  margin: 0;
+}
+
+.editor-container .ce-toolbar__plus,
+.editor-container .ce-toolbar__settings-btn {
+  color: #666;
+  background: #fff;
+}
+
+.editor-container .ce-toolbar__plus:hover,
+.editor-container .ce-toolbar__settings-btn:hover {
+  background: #f1f1f1;
+}
+
+/* MDXEditor styles */
+.mdxeditor {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  height: 100%;
+}
+
+.mdxeditor [data-md-editor="true"] {
+  height: 100%;
+}
