@@ -135,23 +135,18 @@ export function PresentationContent() {
 
     case "image":
       return (
-        <motion.div
-          key={`image-${currentSlideIndex}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center gap-4"
-        >
+        <div key={`image-${currentSlideIndex}`} className="fixed inset-0">
           <Image
             src={currentSlide.url}
             alt={currentSlide.caption || ""}
-            width={1920}
-            height={1080}
-            className="max-h-[80vh] object-contain"
+            fill
+            quality={100}
+            className="object-contain"
           />
-          {currentSlide.caption && (
+          {/* {currentSlide.caption && (
             <p className="text-white text-sm">{currentSlide.caption}</p>
-          )}
-        </motion.div>
+          )} */}
+        </div>
       )
 
     default:

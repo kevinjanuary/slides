@@ -94,28 +94,29 @@ const PresentationMode = () => {
 
   return (
     <div className="fixed inset-0 bg-[hsl(220,13%,10%)] flex items-center justify-center select-none">
-      <div className="w-full max-w-4xl" id="presentation-container">
-        <div className="bg-[hsl(220,13%,18%)] p-8 pt-0 rounded-lg aspect-video">
-          <div className="flex pt-6 pb-4 justify-between items-center gap-4 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="size-3 bg-red-500 rounded-full"></span>
-              <span className="size-3 bg-yellow-500 rounded-full"></span>
-              <span className="size-3 bg-green-500 rounded-full"></span>
-            </div>
-            <h1>GDGOC.jsx</h1>
-            <div className="text-white">
-              {currentSlideIndex + 1} / {slides.length}
-            </div>
+      <div
+        className="max-w-screen-lg w-full bg-[hsl(220,13%,18%)] p-8 pt-0 rounded-lg aspect-video"
+        id="presentation-container"
+      >
+        <div className="flex pt-6 pb-4 justify-between items-center gap-4 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="size-3 bg-red-500 rounded-full"></span>
+            <span className="size-3 bg-yellow-500 rounded-full"></span>
+            <span className="size-3 bg-green-500 rounded-full"></span>
           </div>
-          <pre
-            className="text-xl leading-relaxed overflow-hidden whitespace-pre-wrap relative h-full pointer-events-none select-none"
-            id="presentation-code-container"
-          >
-            <PresentationContent />
-          </pre>
+          <h1>GDGOC.jsx</h1>
+          <div className="text-white">
+            {currentSlideIndex + 1} / {slides.length}
+          </div>
         </div>
+        <pre
+          className="text-xl leading-relaxed overflow-hidden whitespace-pre-wrap relative h-full pointer-events-none select-none"
+          id="presentation-code-container"
+        >
+          <PresentationContent />
+        </pre>
       </div>
-      <div className="fixed bottom-8 left-8 flex gap-4">
+      <div className="fixed bottom-4 left-4 flex gap-4 opacity-50">
         <button
           onClick={(e) => {
             e.stopPropagation()
@@ -149,7 +150,7 @@ const PresentationMode = () => {
           </button>
         )}
       </div>
-      <div className="fixed bottom-8 right-8 flex gap-4">
+      <div className="fixed bottom-4 right-4 flex gap-4 opacity-50">
         <button
           onClick={(e) => {
             e.stopPropagation()

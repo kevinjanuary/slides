@@ -27,15 +27,12 @@ const renderSlidePreview = (slide: Slide) => {
       return <TextViewer content={slide.content} />
     case "image":
       return (
-        <div className="h-full flex items-center justify-center">
-          <Image
-            src={slide.url}
-            alt={slide.caption || ""}
-            className="max-h-full"
-            width={200}
-            height={150}
-          />
-        </div>
+        <Image
+          src={slide.url}
+          alt={slide.caption || ""}
+          className="object-contain"
+          fill
+        />
       )
     default:
       return null
@@ -60,7 +57,7 @@ const DraggableSlide = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`relative p-3 bg-[hsl(220,13%,18%)] shadow-sm rounded-lg mb-4 aspect-video select-none cursor-pointer overflow-hidden ${
+          className={`relative bg-[hsl(220,13%,18%)] shadow-sm rounded-lg mb-4 aspect-video select-none !cursor-default overflow-hidden ${
             currentSlideIndex === index ? "ring-2 ring-white/20" : ""
           }`}
           onClick={() => useSlideStore.getState().setCurrentSlideIndex(index)}
@@ -69,7 +66,7 @@ const DraggableSlide = ({
             {renderSlidePreview(slide)}
           </div>
           <button
-            className="absolute top-2 right-2 rounded-md bg-white/10 size-6 hover:bg-white/20 flex items-center justify-center"
+            className="absolute top-2 right-2 rounded-md bg-black/30 size-6 hover:bg-black/70 flex items-center justify-center"
             onClick={(e) => {
               e.stopPropagation()
               onDelete(index)
@@ -77,7 +74,7 @@ const DraggableSlide = ({
           >
             <Trash2Icon size={12} />
           </button>
-          <span className="capitalize text-[9px] px-1 py-0.5 rounded-md bg-white/5 text-white absolute bottom-2 left-2">
+          <span className="capitalize text-[9px] px-1 py-0.5 rounded-md bg-black/30 text-white absolute bottom-2 left-2">
             {slide.type}
           </span>
         </pre>
@@ -169,7 +166,7 @@ export function SlideList() {
   }
 
   return (
-    <div className="relative h-[calc(100vh-3rem)] overflow-overlay rounded-lg bg-[hsl(220,13%,26%)] p-4 text-xs">
+    <div className="relative h-[calc(100vh-3rem)] overflow-overlay rounded-lg p-4 text-xs">
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="slides-list">
           {(provided) => (

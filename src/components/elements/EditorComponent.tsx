@@ -26,7 +26,7 @@ const Editor: FC<EditorProps> = ({ markdown, editorRef, onChange }) => {
   return (
     <MDXEditor
       className="dark-theme dark-editor w-full h-full"
-      contentEditableClassName="prose prose-invert"
+      contentEditableClassName="prose prose-invert !p-0"
       onChange={onChange}
       ref={editorRef}
       markdown={markdown}

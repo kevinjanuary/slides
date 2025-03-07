@@ -22,7 +22,7 @@ const dummySlides: Slide[] = [
   {
     id: "demo-3",
     type: "image",
-    url: "https://source.unsplash.com/random/800x600",
+    url: "https://placehold.co/300x300/webp?text=Hello+World",
     caption: "A random image example",
   },
 ]

@@ -129,15 +129,14 @@ export function SlideEditor() {
                 useSlideStore.getState().setSlides(newSlides)
               }}
               placeholder="Enter image URL..."
-              className="w-full p-2 bg-[hsl(220,13%,26%)] text-white rounded-lg"
+              className="w-full p-2 bg-[hsl(220,13%,26%)] text-white rounded-lg absolute left-0 -top-12"
             />
             {currentSlide.url && (
               <Image
                 src={currentSlide.url}
                 alt={currentSlide.caption || ""}
-                className="max-h-[60vh] object-contain mt-4"
-                width={1920}
-                height={1080}
+                className="object-contain rounded-md"
+                fill
               />
             )}
           </div>

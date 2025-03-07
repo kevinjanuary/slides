@@ -1,5 +1,5 @@
-import { SlideList } from "./SlideList"
 import { SlideEditor } from "./SlideEditor"
+import { SlideList } from "./SlideList"
 
 export function EditorMode() {
   return (
